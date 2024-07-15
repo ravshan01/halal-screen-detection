@@ -12,7 +12,9 @@ import { ConfigModule } from '@nestjs/config';
         '.env',
         '.env.local',
       ],
+
       isGlobal: true,
+      cache: true,
     }),
   ],
   controllers: [AppController],
