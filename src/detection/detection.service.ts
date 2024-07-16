@@ -5,9 +5,10 @@ import {
 } from '@aws-sdk/client-rekognition';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '../config/types/environment-variables.type';
+import { IDetectionService } from './detection.service.type';
 
 @Injectable()
-export class DetectionService {
+export class DetectionService implements IDetectionService {
   private rekognitionClient: RekognitionClient;
 
   constructor(
