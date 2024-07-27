@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IImagesService } from './images.service.type';
-import sharp from 'sharp';
+import * as sharp from 'sharp';
 
 @Injectable()
 export class ImagesService implements IImagesService {
