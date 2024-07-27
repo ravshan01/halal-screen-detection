@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DetectionService } from './detection.service';
 import { ConfigModule } from '@nestjs/config';
+import { join } from 'node:path';
+import * as fs from 'node:fs';
+import { ImagesModule } from '../images/images.module';
 
 describe('DetectionService', () => {
   let service: DetectionService;
@@ -11,6 +14,7 @@ describe('DetectionService', () => {
         ConfigModule.forRoot({
           envFilePath: ['.env.test', '.env.test.local'],
         }),
+        ImagesModule,
       ],
       providers: [DetectionService],
     }).compile();
@@ -23,8 +27,11 @@ describe('DetectionService', () => {
   });
 
   it('should detect labels in an image', async () => {
-    const imageBytes = Buffer.from('image bytes');
-    const labels = await service.detectLabelsInImage(imageBytes);
+    const buffer = await fs.promises.readFile(
+      join(__dirname, './mock/images/room.jpg'),
+    );
+    const labels = await service.detectLabelsInImage(buffer);
+
     expect(labels).toBeDefined();
   });
 });
