@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
+  BoundingBox,
   DetectLabelsCommand,
   RekognitionClient,
 } from '@aws-sdk/client-rekognition';
@@ -8,6 +9,9 @@ import { EnvironmentVariables } from '../config/types/environment-variables.type
 import { IDetectionService } from './detection.service.type';
 import * as fs from 'node:fs';
 import { join } from 'node:path';
+import { IMAGES_SERVICE_KEY } from '../images/constants/di-keys.constants';
+import { IImagesService } from '../images/images.service.type';
+import { IImageMetadata } from '../images/types/image-metadata.type';
 
 @Injectable()
 export class DetectionService implements IDetectionService {
@@ -15,6 +19,8 @@ export class DetectionService implements IDetectionService {
 
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
+    @Inject(IMAGES_SERVICE_KEY)
+    private readonly imagesService: IImagesService,
   ) {
     this.rekognitionClient = new RekognitionClient({
       region: configService.get('AWS_REGION'),
@@ -40,13 +46,12 @@ export class DetectionService implements IDetectionService {
 
     try {
       const response = await this.rekognitionClient.send(command);
+      const imageMetadata = await this.imagesService.getMetadata(imageBytes);
+
       const data = response.Labels[0].Instances.map((instance) => ({
         object: 'Person',
         score: instance.Confidence,
-        x: instance.BoundingBox?.Left,
-        y: instance.BoundingBox?.Top,
-        width: instance.BoundingBox?.Width,
-        height: instance.BoundingBox?.Height,
+        ...this.boundingBox2PixelCoords(instance.BoundingBox, imageMetadata),
       }));
 
       // for test
@@ -64,5 +69,27 @@ export class DetectionService implements IDetectionService {
       console.error(error);
       throw new Error('Failed to detect labels in the image.');
     }
+  }
+
+  /**
+   * The AWS Rekognition BoundingBox contains a percentage value relative to the width or height of the image
+   * <br>
+   * BoundingBox example
+   * ```json
+   * {
+   *    "Height": 0.6601227521896362,
+   *    "Left": 0.5589394569396973,
+   *    "Top": 0.27017539739608765,
+   *    "Width": 0.367832213640213
+   * }
+   * ```
+   */
+  private boundingBox2PixelCoords(box: BoundingBox, metadata: IImageMetadata) {
+    return {
+      x: box.Left * metadata.width,
+      y: box.Top * metadata.height,
+      width: box.Width * metadata.width,
+      height: box.Height * metadata.height,
+    };
   }
 }
