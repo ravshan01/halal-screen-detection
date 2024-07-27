@@ -1,6 +1,6 @@
 export interface IImagesService {
   getMetadata(
-    imageBytes:
+    image:
       | Buffer
       | ArrayBuffer
       | Uint8Array
