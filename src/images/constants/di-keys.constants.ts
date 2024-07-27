@@ -1,0 +1,1 @@
+export const IMAGES_SERVICE_KEY = 'IMAGES_SERVICE_KEY';
