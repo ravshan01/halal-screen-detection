@@ -19,6 +19,7 @@ export class DetectionService implements IDetectionService {
       credentials: {
         accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
         secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
+        // sessionToken: configService.get('AWS_SESSION_TOKEN'),
       },
     });
   }
