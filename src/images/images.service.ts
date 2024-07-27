@@ -1,6 +1,7 @@
+import * as sharp from 'sharp';
 import { Injectable } from '@nestjs/common';
 import { IImagesService } from './images.service.type';
-import * as sharp from 'sharp';
+import { IImageMetadata } from './types/image-metadata.type';
 
 @Injectable()
 export class ImagesService implements IImagesService {
@@ -26,6 +27,6 @@ export class ImagesService implements IImagesService {
       size: metadata.size,
       width: metadata.width,
       height: metadata.height,
-    };
+    } satisfies IImageMetadata;
   }
 }
