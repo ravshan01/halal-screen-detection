@@ -6,6 +6,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '../config/types/environment-variables.type';
 import { IDetectionService } from './detection.service.type';
+import * as fs from 'node:fs';
+import { join } from 'node:path';
 
 @Injectable()
 export class DetectionService implements IDetectionService {
@@ -29,12 +31,35 @@ export class DetectionService implements IDetectionService {
       Image: {
         Bytes: imageBytes,
       },
+      Settings: {
+        GeneralLabels: {
+          LabelInclusionFilters: ['Person'],
+        },
+      },
     });
 
     try {
       const response = await this.rekognitionClient.send(command);
-      console.log(response);
-      return response.Labels;
+      const data = response.Labels[0].Instances.map((instance) => ({
+        object: 'Person',
+        score: instance.Confidence,
+        x: instance.BoundingBox?.Left,
+        y: instance.BoundingBox?.Top,
+        width: instance.BoundingBox?.Width,
+        height: instance.BoundingBox?.Height,
+      }));
+
+      // for test
+      // await fs.promises.writeFile(
+      //   join(__dirname, 'response.json'),
+      //   JSON.stringify(response, null, 2),
+      // );
+      //
+      // await fs.promises.writeFile(
+      //   join(__dirname, 'data.json'),
+      //   JSON.stringify(data, null, 2),
+      // );
+      return data;
     } catch (error) {
       console.error(error);
       throw new Error('Failed to detect labels in the image.');
