@@ -34,6 +34,14 @@ export class DetectionService implements IDetectionService {
     });
   }
 
+  async detectLabelsInImages(images: Buffer[]) {
+    const data = await Promise.all(
+      images.map((image) => this.detectLabelsInImage(image)),
+    );
+
+    return data;
+  }
+
   async detectLabelsInImage(imageBytes: Buffer) {
     const command = new DetectLabelsCommand({
       Image: {

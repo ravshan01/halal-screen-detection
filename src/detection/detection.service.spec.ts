@@ -30,8 +30,48 @@ describe('DetectionService', () => {
     expect(service).toBeDefined();
   });
 
+  it("'detectLabelsInImages' should detect labels in images", async () => {
+    const detectionImagesWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST;
+
+    const buffers = await Promise.all(
+      detectionImagesWithResult.map((detectionImage) =>
+        fs.promises.readFile(detectionImage.path),
+      ),
+    );
+    const detections = await service.detectLabelsInImages(buffers);
+
+    expect(detections).toBeDefined();
+    expect(detections).toBeInstanceOf(Array);
+    expect(detections).toHaveLength(detectionImagesWithResult.length);
+
+    detections.forEach((detection, index) => {
+      const detectionImageWithResult = detectionImagesWithResult[index];
+
+      const groupedDetections = detection.reduce(
+        (acc, detection) => ({
+          ...acc,
+          [detection.object]: [...(acc[detection.object] || []), detection],
+        }),
+        {} as Record<DetectionObject, IDetection[]>,
+      );
+
+      Object.entries(groupedDetections).forEach(([object, detections]) => {
+        const count =
+          detectionImageWithResult.result[object as DetectionObject].count;
+
+        if (typeof count === 'number') {
+          expect(detections).toHaveLength(count);
+        }
+        if (typeof count === 'object') {
+          expect(detections.length).toBeGreaterThanOrEqual(count.min);
+          expect(detections.length).toBeLessThanOrEqual(count.max);
+        }
+      });
+    });
+  });
+
   it("'detectLabelsInImage' should detect labels in an image", async () => {
-    const detectionImageWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST[3];
+    const detectionImageWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST[2];
 
     const buffer = await fs.promises.readFile(detectionImageWithResult.path);
     const detections = await service.detectLabelsInImage(buffer);
