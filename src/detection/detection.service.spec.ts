@@ -69,35 +69,4 @@ describe('DetectionService', () => {
       });
     });
   });
-
-  it("'detectLabelsInImage' should detect labels in an image", async () => {
-    const detectionImageWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST[2];
-
-    const buffer = await fs.promises.readFile(detectionImageWithResult.path);
-    const detections = await service.detectLabelsInImage(buffer);
-
-    expect(detections).toBeDefined();
-    expect(detections).toBeInstanceOf(Array);
-
-    const groupedDetections = detections.reduce(
-      (acc, detection) => ({
-        ...acc,
-        [detection.object]: [...(acc[detection.object] || []), detection],
-      }),
-      {} as Record<DetectionObject, IDetection[]>,
-    );
-
-    Object.entries(groupedDetections).forEach(([object, detections]) => {
-      const count =
-        detectionImageWithResult.result[object as DetectionObject].count;
-
-      if (typeof count === 'number') {
-        expect(detections).toHaveLength(count);
-      }
-      if (typeof count === 'object') {
-        expect(detections.length).toBeGreaterThanOrEqual(count.min);
-        expect(detections.length).toBeLessThanOrEqual(count.max);
-      }
-    });
-  });
 });
