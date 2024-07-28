@@ -4,7 +4,7 @@ package detection;
 
 service DetectionService {
   rpc DetectImages(DetectImagesRequest) returns (DetectImagesResponse) {}
-  rpc DetectVideo(DetectVideoRequest) returns (DetectVideoResponse) {}
+//  rpc DetectVideo(DetectVideoRequest) returns (DetectVideoResponse) {}
 }
 
 message DetectImagesRequest {
