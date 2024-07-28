@@ -1,9 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DetectionService } from './detection.service';
-import { ConfigModule } from '@nestjs/config';
-import { join } from 'node:path';
 import * as fs from 'node:fs';
+import { join } from 'node:path';
+
+import { ConfigModule } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+
 import { ImagesModule } from '../images/images.module';
+import { DetectionService } from './detection.service';
 
 describe('DetectionService', () => {
   let service: DetectionService;

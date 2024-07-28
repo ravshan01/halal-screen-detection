@@ -1,17 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import * as fs from 'node:fs';
+import { join } from 'node:path';
+
 import {
   BoundingBox,
   DetectLabelsCommand,
   RekognitionClient,
 } from '@aws-sdk/client-rekognition';
+
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
 import { EnvironmentVariables } from '../config/types/environment-variables.type';
-import { IDetectionService } from './detection.service.type';
-import * as fs from 'node:fs';
-import { join } from 'node:path';
 import { IMAGES_SERVICE_KEY } from '../images/constants/di-keys.constants';
 import { IImagesService } from '../images/images.service.type';
 import { IImageMetadata } from '../images/types/image-metadata.type';
+import { IDetectionService } from './detection.service.type';
 
 @Injectable()
 export class DetectionService implements IDetectionService {
