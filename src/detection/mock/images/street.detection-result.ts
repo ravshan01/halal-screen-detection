@@ -4,6 +4,9 @@ import { IImageDetectionResultForTest } from '../image-detection-result-for-test
 export const STREET_IMAGE_DETECTION_RESULT_FOR_TEST: IImageDetectionResultForTest =
   {
     [DetectionObject.Person]: {
-      count: 3,
+      count: {
+        min: 3,
+        max: 4,
+      },
     },
   };
