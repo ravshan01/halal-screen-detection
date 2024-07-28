@@ -1,8 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ImagesService } from './images.service';
 import * as fs from 'node:fs';
 import { join } from 'node:path';
-import { IMAGES_MOCK_IMAGE_METADATA } from './mock/image.result';
+
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { ImagesService } from './images.service';
+import { IMAGES_MOCK_IMAGE_METADATA } from './mock/image.metadata';
 
 describe('ImagesService', () => {
   let service: ImagesService;
