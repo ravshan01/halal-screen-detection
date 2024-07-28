@@ -1,6 +1,3 @@
-import * as fs from 'node:fs';
-import { join } from 'node:path';
-
 import {
   BoundingBox,
   DetectLabelsCommand,
@@ -62,16 +59,6 @@ export class DetectionService implements IDetectionService {
         ),
       }));
 
-      // for test
-      // await fs.promises.writeFile(
-      //   join(__dirname, 'response.json'),
-      //   JSON.stringify(response, null, 2),
-      // );
-      //
-      // await fs.promises.writeFile(
-      //   join(__dirname, 'data.json'),
-      //   JSON.stringify(data, null, 2),
-      // );
       return data;
     } catch (error) {
       console.error(error);
