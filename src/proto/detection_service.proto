@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package detection;
+
+service DetectionService {
+  rpc DetectImages(DetectImagesRequest) returns (DetectImagesResponse) {}
+  rpc DetectVideo(DetectVideoRequest) returns (DetectVideoResponse) {}
+}
+
+message DetectImagesRequest {
+  repeated Image images = 1;
+}
+message DetectImagesResponse {
+  repeated ImageDetections detections = 1;
+  Error error = 2;
+}
+
+message DetectVideoRequest {
+  Video video = 1;
+}
+message DetectVideoResponse {
+  VideoDetections detections = 1;
+  Error error = 2;
+}
+
+
+message Image {
+  bytes content = 2;
+}
+message ImageDetections {
+  repeated Detection detections = 2;
+}
+
+message Video {
+  bytes content = 2;
+}
+message VideoDetections {
+  repeated ImageDetections detections = 2;
+}
+
+
+message Detection {
+  DetectionObject object = 1;
+  float score = 2;
+  DetectionCoords coords = 3;
+}
+
+enum DetectionObject {
+  Person = 0;
+}
+
+/** Coords in pixels */
+message DetectionCoords {
+  float x = 1;
+  float y = 2;
+  float width = 3;
+  float height = 4;
+}
+
+message Error {
+  int32 code = 1;
+  string message = 2;
+}
