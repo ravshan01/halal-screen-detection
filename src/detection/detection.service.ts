@@ -15,6 +15,8 @@ import { IMAGES_SERVICE_KEY } from '../images/constants/di-keys.constants';
 import { IImagesService } from '../images/images.service.type';
 import { IImageMetadata } from '../images/types/image-metadata.type';
 import { IDetectionService } from './detection.service.type';
+import { DetectionObject } from './enums/detection-object.enum';
+import { IDetection } from './types/detection.types';
 
 @Injectable()
 export class DetectionService implements IDetectionService {
@@ -51,10 +53,13 @@ export class DetectionService implements IDetectionService {
       const response = await this.rekognitionClient.send(command);
       const imageMetadata = await this.imagesService.getMetadata(imageBytes);
 
-      const data = response.Labels[0].Instances.map((instance) => ({
-        object: 'Person',
+      const data = response.Labels[0].Instances.map<IDetection>((instance) => ({
+        object: DetectionObject.Person,
         score: instance.Confidence,
-        ...this.boundingBox2PixelCoords(instance.BoundingBox, imageMetadata),
+        coords: this.boundingBox2DetectionCoords(
+          instance.BoundingBox,
+          imageMetadata,
+        ),
       }));
 
       // for test
@@ -87,7 +92,10 @@ export class DetectionService implements IDetectionService {
    * }
    * ```
    */
-  private boundingBox2PixelCoords(box: BoundingBox, metadata: IImageMetadata) {
+  private boundingBox2DetectionCoords(
+    box: BoundingBox,
+    metadata: IImageMetadata,
+  ): IDetection['coords'] {
     return {
       x: box.Left * metadata.width,
       y: box.Top * metadata.height,
