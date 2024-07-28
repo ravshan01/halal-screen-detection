@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+// Сервис для размытия людей на изображениях и видео
+// Для обнаружения использовать реализацию DetectionService
+service ConverterService {
+  rpc ConvertImages(ConvertImagesRequest) returns (ConvertImagesResponse) {}
+  rpc ConvertVideo(ConvertVideoRequest) returns (ConvertVideoResponse) {}
+}
+
+message ConvertImagesRequest {
+  repeated RequestImage images = 1;
+  Options options = 2;
+}
+message ConvertImagesResponse {
+  repeated ResponseImage images = 1;
+}
+
+message ConvertVideoRequest {
+  RequestVideo video = 1;
+  Options options = 2;
+}
+message ConvertVideoResponse {
+  ResponseVideo video = 1;
+}
+
+message RequestImage {
+  string id = 1;
+  bytes content = 2;
+}
+message ResponseImage {
+  // ImageResponse.id in response should be the same as in ImageRequest.id
+  string id = 1;
+  // has if options.send_bytes is true
+  bytes content = 2;
+  // has if options.save_to_file is true
+  string url = 3;
+}
+
+message RequestVideo {
+  string id = 1;
+  bytes content = 2;
+}
+message ResponseVideo {
+  // VideoResponse.id in response should be the same as in VideoRequest.id
+  string id = 1;
+  // has if options.send_bytes is true
+  bytes content = 2;
+  // has if options.save_to_file is true
+  string url = 3;
+}
+
+message Options {
+  BlurOptions blur = 1;
+  bool send_bytes = 2;
+  bool save_to_file = 3;
+}
+
+message BlurOptions {
+  BlurType type = 1;
+}
+enum BlurType {
+  GAUSSIAN = 0;
+  BOX = 1;
+  MEDIAN = 2;
+  BILATERAL = 3;
+  DIRECTIONAL = 4;
+  KERNEL = 5;
+}
