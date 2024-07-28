@@ -7,7 +7,7 @@
     "<THIRD_PARTY_MODULES>",
     "@nestjs.*",
 
-    "(@\\/|\\.).+"
+    "(@\\/|\\.+\/).+"
   ],
   "importOrderSeparation": true,
   "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"]
