@@ -46,16 +46,19 @@ $ yarn run test:cov
     $ git remote add halal-screen-proto path_to_repository
   ```
 
-- Subtree control
-   - Add subtree
-     ```bash
-     $ git subtree add --prefix src/proto halal-screen-proto master --squash
-     ``` 
-   - Fetch subtree
-     ```bash
-     $ git fetch halal-screen-proto master
-     ```
-   - Pull subtree
-     ```bash
-     $ git subtree pull --prefix src/proto halal-screen-proto master --squash
-     ```
+  - Subtree control
+     - Add subtree
+       ```bash
+       $ git subtree add --prefix src/proto halal-screen-proto master --squash
+       ``` 
+     - Fetch subtree
+       ```bash
+       $ git fetch halal-screen-proto master
+       ```
+     - Pull subtree
+       ```bash
+       $ git subtree pull --prefix src/proto halal-screen-proto master --squash
+       ```
+       ```bash
+       $ :qa
+       ```
