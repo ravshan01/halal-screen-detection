@@ -4,10 +4,10 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ImagesModule } from '../images/images.module';
+import { DetectImagesRequest, type Detection, Image } from '../proto/detection';
 import { DetectionService } from './detection.service';
 import { DetectionObject } from './enums/detection-object.enum';
 import { DETECTION_IMAGES_WITH_RESULT_FOR_TEST } from './mock/images';
-import { IDetection } from './types/detection.types';
 
 describe('DetectionService', () => {
   let service: DetectionService;
@@ -38,26 +38,29 @@ describe('DetectionService', () => {
         fs.promises.readFile(detectionImage.path),
       ),
     );
-    const detections = await service.detectLabelsInImages(buffers);
+    const response = await service.detectLabelsInImages(
+      DetectImagesRequest.create({
+        images: buffers.map((buffer) => Image.create({ content: buffer })),
+      }),
+    );
 
-    expect(detections).toBeDefined();
-    expect(detections).toBeInstanceOf(Array);
-    expect(detections).toHaveLength(detectionImagesWithResult.length);
+    expect(response).toBeDefined();
+    expect(response.detections).toBeDefined();
+    expect(response.detections).toHaveLength(detectionImagesWithResult.length);
 
-    detections.forEach((detection, index) => {
-      const detectionImageWithResult = detectionImagesWithResult[index];
-
-      const groupedDetections = detection.reduce(
+    response.detections.forEach((imageDetections, index) => {
+      const groupedDetections = imageDetections.detections.reduce(
         (acc, detection) => ({
           ...acc,
           [detection.object]: [...(acc[detection.object] || []), detection],
         }),
-        {} as Record<DetectionObject, IDetection[]>,
+        {} as Record<DetectionObject, Detection[]>,
       );
 
       Object.entries(groupedDetections).forEach(([object, detections]) => {
         const count =
-          detectionImageWithResult.result[object as DetectionObject].count;
+          detectionImagesWithResult[index].result[object as DetectionObject]
+            .count;
 
         if (typeof count === 'number') {
           expect(detections).toHaveLength(count);

@@ -11,9 +11,15 @@ import { EnvironmentVariables } from '../config/types/environment-variables.type
 import { IMAGES_SERVICE_KEY } from '../images/constants/di-keys.constants';
 import { IImagesService } from '../images/images.service.type';
 import { IImageMetadata } from '../images/types/image-metadata.type';
+import {
+  DetectionObject,
+  type DetectImagesRequest,
+  type DetectImagesResponse,
+  type Detection,
+  type Image,
+  type ImageDetections,
+} from '../proto/detection';
 import { IDetectionService } from './detection.service.type';
-import { DetectionObject } from './enums/detection-object.enum';
-import { IDetection } from './types/detection.types';
 
 @Injectable()
 export class DetectionService implements IDetectionService {
@@ -34,14 +40,20 @@ export class DetectionService implements IDetectionService {
     });
   }
 
-  async detectLabelsInImages(images: (Buffer | Uint8Array)[]) {
-    return Promise.all(images.map((image) => this.detectLabelsInImage(image)));
+  async detectLabelsInImages(
+    request: DetectImagesRequest,
+  ): Promise<DetectImagesResponse> {
+    const detections = await Promise.all(
+      request.images.map((image) => this.detectLabelsInImage(image)),
+    );
+
+    return { detections };
   }
 
-  private async detectLabelsInImage(imageBytes: Buffer | Uint8Array) {
+  private async detectLabelsInImage(image: Image): Promise<ImageDetections> {
     const command = new DetectLabelsCommand({
       Image: {
-        Bytes: imageBytes,
+        Bytes: image.content,
       },
       Settings: {
         GeneralLabels: {
@@ -52,16 +64,20 @@ export class DetectionService implements IDetectionService {
 
     try {
       const response = await this.rekognitionClient.send(command);
-      const imageMetadata = await this.imagesService.getMetadata(imageBytes);
+      const imageMetadata = await this.imagesService.getMetadata(image.content);
 
-      return response.Labels[0].Instances.map<IDetection>((instance) => ({
-        object: DetectionObject.Person,
-        score: instance.Confidence,
-        coords: this.boundingBox2DetectionCoords(
-          instance.BoundingBox,
-          imageMetadata,
-        ),
-      }));
+      const detections = response.Labels[0].Instances.map<Detection>(
+        (instance) => ({
+          object: DetectionObject.Person,
+          score: instance.Confidence,
+          coords: this.boundingBox2DetectionCoords(
+            instance.BoundingBox,
+            imageMetadata,
+          ),
+        }),
+      );
+
+      return { detections };
     } catch (error) {
       console.error(error);
       throw new Error('Failed to detect labels in the image.');
@@ -84,7 +100,7 @@ export class DetectionService implements IDetectionService {
   private boundingBox2DetectionCoords(
     box: BoundingBox,
     metadata: IImageMetadata,
-  ): IDetection['coords'] {
+  ): Detection['coords'] {
     return {
       x: box.Left * metadata.width,
       y: box.Top * metadata.height,
