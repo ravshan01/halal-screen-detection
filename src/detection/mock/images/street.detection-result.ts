@@ -1,4 +1,4 @@
-import { DetectionObject } from '../../enums/detection-object.enum';
+import { DetectionObject } from '../../../proto/detection';
 import { IImageDetectionResultForTest } from '../image-detection-result-for-test.type';
 
 export const STREET_IMAGE_DETECTION_RESULT_FOR_TEST: IImageDetectionResultForTest =

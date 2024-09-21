@@ -1,4 +1,4 @@
-import { DetectionObject } from '../enums/detection-object.enum';
+import { DetectionObject } from '../../proto/detection';
 
 export type IImageDetectionResultForTest = Record<
   DetectionObject,
