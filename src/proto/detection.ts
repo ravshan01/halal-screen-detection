@@ -31,9 +31,9 @@ export interface DetectImagesResponse {
    */
   detections: ImageDetections[];
   /**
-   * @generated from protobuf field: detection.Error error = 2;
+   * @generated from protobuf field: detection.DetectError error = 2;
    */
-  error?: Error;
+  error?: DetectError;
 }
 // message DetectVideoRequest {
 //  Video video = 1;
@@ -48,7 +48,7 @@ export interface DetectImagesResponse {
  */
 export interface Image {
   /**
-   * @generated from protobuf field: bytes content = 2;
+   * @generated from protobuf field: bytes content = 1;
    */
   content: Uint8Array;
 }
@@ -57,7 +57,7 @@ export interface Image {
  */
 export interface ImageDetections {
   /**
-   * @generated from protobuf field: repeated detection.Detection detections = 2;
+   * @generated from protobuf field: repeated detection.Detection detections = 1;
    */
   detections: Detection[];
 }
@@ -109,13 +109,13 @@ export interface Detection_Coords {
   height: number;
 }
 /**
- * @generated from protobuf message detection.Error
+ * @generated from protobuf message detection.DetectError
  */
-export interface Error {
+export interface DetectError {
   /**
-   * @generated from protobuf field: int32 code = 1;
+   * @generated from protobuf field: detection.DetectErrorCode code = 1;
    */
-  code: number;
+  code: DetectErrorCode;
   /**
    * @generated from protobuf field: string message = 2;
    */
@@ -129,6 +129,63 @@ export enum DetectionObject {
    * @generated from protobuf enum value: Person = 0;
    */
   Person = 0,
+}
+/**
+ * @generated from protobuf enum detection.DetectErrorCode
+ */
+export enum DetectErrorCode {
+  /**
+   * @generated from protobuf enum value: UnsupportedFormat = 0;
+   */
+  UnsupportedFormat = 0,
+  /**
+   * @generated from protobuf enum value: ImageOrVideoCorrupted = 1;
+   */
+  ImageOrVideoCorrupted = 1,
+  /**
+   * @generated from protobuf enum value: MaxImageSizeExceeded = 2;
+   */
+  MaxImageSizeExceeded = 2,
+  /**
+   * @generated from protobuf enum value: MaxImagesCountExceeded = 3;
+   */
+  MaxImagesCountExceeded = 3,
+  /**
+   * @generated from protobuf enum value: MaxVideoSizeExceeded = 4;
+   */
+  MaxVideoSizeExceeded = 4,
+  /**
+   * @generated from protobuf enum value: MaxVideoDurationExceeded = 5;
+   */
+  MaxVideoDurationExceeded = 5,
+  /**
+   * @generated from protobuf enum value: MaxVideoCountExceeded = 6;
+   */
+  MaxVideoCountExceeded = 6,
+  /**
+   * @generated from protobuf enum value: MaxRequestSizeExceeded = 7;
+   */
+  MaxRequestSizeExceeded = 7,
+  /**
+   * @generated from protobuf enum value: InvalidRequest = 8;
+   */
+  InvalidRequest = 8,
+  /**
+   * @generated from protobuf enum value: Timeout = 9;
+   */
+  Timeout = 9,
+  /**
+   * @generated from protobuf enum value: InternalError = 10;
+   */
+  InternalError = 10,
+  /**
+   * @generated from protobuf enum value: ServiceUnavailable = 11;
+   */
+  ServiceUnavailable = 11,
+  /**
+   * @generated from protobuf enum value: Unexpected = 99;
+   */
+  Unexpected = 99,
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class DetectImagesRequest$Type extends MessageType<DetectImagesRequest> {
@@ -222,7 +279,7 @@ class DetectImagesResponse$Type extends MessageType<DetectImagesResponse> {
         repeat: 1 /*RepeatType.PACKED*/,
         T: () => ImageDetections,
       },
-      { no: 2, name: 'error', kind: 'message', T: () => Error },
+      { no: 2, name: 'error', kind: 'message', T: () => DetectError },
     ]);
   }
   create(value?: PartialMessage<DetectImagesResponse>): DetectImagesResponse {
@@ -252,8 +309,8 @@ class DetectImagesResponse$Type extends MessageType<DetectImagesResponse> {
             ),
           );
           break;
-        case /* detection.Error error */ 2:
-          message.error = Error.internalBinaryRead(
+        case /* detection.DetectError error */ 2:
+          message.error = DetectError.internalBinaryRead(
             reader,
             reader.uint32(),
             options,
@@ -291,9 +348,9 @@ class DetectImagesResponse$Type extends MessageType<DetectImagesResponse> {
         writer.tag(1, WireType.LengthDelimited).fork(),
         options,
       ).join();
-    /* detection.Error error = 2; */
+    /* detection.DetectError error = 2; */
     if (message.error)
-      Error.internalBinaryWrite(
+      DetectError.internalBinaryWrite(
         message.error,
         writer.tag(2, WireType.LengthDelimited).fork(),
         options,
@@ -316,7 +373,7 @@ export const DetectImagesResponse = new DetectImagesResponse$Type();
 class Image$Type extends MessageType<Image> {
   constructor() {
     super('detection.Image', [
-      { no: 2, name: 'content', kind: 'scalar', T: 12 /*ScalarType.BYTES*/ },
+      { no: 1, name: 'content', kind: 'scalar', T: 12 /*ScalarType.BYTES*/ },
     ]);
   }
   create(value?: PartialMessage<Image>): Image {
@@ -337,7 +394,7 @@ class Image$Type extends MessageType<Image> {
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* bytes content */ 2:
+        case /* bytes content */ 1:
           message.content = reader.bytes();
           break;
         default:
@@ -364,9 +421,9 @@ class Image$Type extends MessageType<Image> {
     writer: IBinaryWriter,
     options: BinaryWriteOptions,
   ): IBinaryWriter {
-    /* bytes content = 2; */
+    /* bytes content = 1; */
     if (message.content.length)
-      writer.tag(2, WireType.LengthDelimited).bytes(message.content);
+      writer.tag(1, WireType.LengthDelimited).bytes(message.content);
     let u = options.writeUnknownFields;
     if (u !== false)
       (u == true ? UnknownFieldHandler.onWrite : u)(
@@ -386,7 +443,7 @@ class ImageDetections$Type extends MessageType<ImageDetections> {
   constructor() {
     super('detection.ImageDetections', [
       {
-        no: 2,
+        no: 1,
         name: 'detections',
         kind: 'message',
         repeat: 1 /*RepeatType.PACKED*/,
@@ -412,7 +469,7 @@ class ImageDetections$Type extends MessageType<ImageDetections> {
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* repeated detection.Detection detections */ 2:
+        case /* repeated detection.Detection detections */ 1:
           message.detections.push(
             Detection.internalBinaryRead(reader, reader.uint32(), options),
           );
@@ -441,11 +498,11 @@ class ImageDetections$Type extends MessageType<ImageDetections> {
     writer: IBinaryWriter,
     options: BinaryWriteOptions,
   ): IBinaryWriter {
-    /* repeated detection.Detection detections = 2; */
+    /* repeated detection.Detection detections = 1; */
     for (let i = 0; i < message.detections.length; i++)
       Detection.internalBinaryWrite(
         message.detections[i],
-        writer.tag(2, WireType.LengthDelimited).fork(),
+        writer.tag(1, WireType.LengthDelimited).fork(),
         options,
       ).join();
     let u = options.writeUnknownFields;
@@ -650,33 +707,38 @@ class Detection_Coords$Type extends MessageType<Detection_Coords> {
  */
 export const Detection_Coords = new Detection_Coords$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class Error$Type extends MessageType<Error> {
+class DetectError$Type extends MessageType<DetectError> {
   constructor() {
-    super('detection.Error', [
-      { no: 1, name: 'code', kind: 'scalar', T: 5 /*ScalarType.INT32*/ },
+    super('detection.DetectError', [
+      {
+        no: 1,
+        name: 'code',
+        kind: 'enum',
+        T: () => ['detection.DetectErrorCode', DetectErrorCode],
+      },
       { no: 2, name: 'message', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
     ]);
   }
-  create(value?: PartialMessage<Error>): Error {
+  create(value?: PartialMessage<DetectError>): DetectError {
     const message = globalThis.Object.create(this.messagePrototype!);
     message.code = 0;
     message.message = '';
     if (value !== undefined)
-      reflectionMergePartial<Error>(this, message, value);
+      reflectionMergePartial<DetectError>(this, message, value);
     return message;
   }
   internalBinaryRead(
     reader: IBinaryReader,
     length: number,
     options: BinaryReadOptions,
-    target?: Error,
-  ): Error {
+    target?: DetectError,
+  ): DetectError {
     let message = target ?? this.create(),
       end = reader.pos + length;
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* int32 code */ 1:
+        case /* detection.DetectErrorCode code */ 1:
           message.code = reader.int32();
           break;
         case /* string message */ 2:
@@ -702,11 +764,11 @@ class Error$Type extends MessageType<Error> {
     return message;
   }
   internalBinaryWrite(
-    message: Error,
+    message: DetectError,
     writer: IBinaryWriter,
     options: BinaryWriteOptions,
   ): IBinaryWriter {
-    /* int32 code = 1; */
+    /* detection.DetectErrorCode code = 1; */
     if (message.code !== 0) writer.tag(1, WireType.Varint).int32(message.code);
     /* string message = 2; */
     if (message.message !== '')
@@ -722,9 +784,9 @@ class Error$Type extends MessageType<Error> {
   }
 }
 /**
- * @generated MessageType for protobuf message detection.Error
+ * @generated MessageType for protobuf message detection.DetectError
  */
-export const Error = new Error$Type();
+export const DetectError = new DetectError$Type();
 /**
  * @generated ServiceType for protobuf service detection.DetectionService
  */
