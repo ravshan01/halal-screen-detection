@@ -50,6 +50,8 @@ export class DetectionService implements IDetectionService {
     return { detections };
   }
 
+  // TODO: check image.content type
+  // TODO: add error handling
   private async detectLabelsInImage(image: Image): Promise<ImageDetections> {
     const command = new DetectLabelsCommand({
       Image: {
