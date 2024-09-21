@@ -7,14 +7,14 @@ import {
 } from '../proto/detection';
 import {
   DETECTION_PROVIDER_KEY,
-  DetectionProvider,
+  IDetectionProvider,
 } from './detection.provider';
 
 @Controller()
 export class DetectionController {
   constructor(
     @Inject(DETECTION_PROVIDER_KEY)
-    private detectionService: DetectionProvider,
+    private detectionService: IDetectionProvider,
   ) {}
 
   @GrpcMethod('DetectionService')

@@ -5,7 +5,7 @@ import {
 
 export const DETECTION_PROVIDER_KEY = 'DETECTION_PROVIDER_KEY';
 
-export interface DetectionProvider {
+export interface IDetectionProvider {
   detectLabelsInImages(
     images: DetectImagesRequest,
   ): Promise<DetectImagesResponse>;
