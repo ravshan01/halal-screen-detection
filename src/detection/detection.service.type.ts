@@ -1,7 +1,10 @@
-import { IDetection } from './types/detection.types';
+import type {
+  DetectImagesRequest,
+  DetectImagesResponse,
+} from '../proto/detection';
 
 export interface IDetectionService {
   detectLabelsInImages(
-    images: (Buffer | Uint8Array)[],
-  ): Promise<Array<IDetection[]>>;
+    images: DetectImagesRequest,
+  ): Promise<DetectImagesResponse>;
 }
