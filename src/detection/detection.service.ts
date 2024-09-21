@@ -19,7 +19,7 @@ import {
   type Image,
   type ImageDetections,
 } from '../proto/detection';
-import { IDetectionService } from './detection.service.type';
+import { IDetectionService } from './detection.provider';
 
 @Injectable()
 export class DetectionService implements IDetectionService {

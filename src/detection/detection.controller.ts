@@ -5,8 +5,7 @@ import {
   type DetectImagesRequest as IDetectImagesRequest,
   type DetectImagesResponse as IDetectImagesResponse,
 } from '../proto/detection';
-import { DETECTION_SERVICE_KEY } from './constants/di-keys.constants';
-import { IDetectionService } from './detection.service.type';
+import { DETECTION_SERVICE_KEY, IDetectionService } from './detection.provider';
 
 @Controller()
 export class DetectionController {
