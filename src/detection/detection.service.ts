@@ -34,11 +34,11 @@ export class DetectionService implements IDetectionService {
     });
   }
 
-  async detectLabelsInImages(images: Buffer[]) {
+  async detectLabelsInImages(images: (Buffer | Uint8Array)[]) {
     return Promise.all(images.map((image) => this.detectLabelsInImage(image)));
   }
 
-  private async detectLabelsInImage(imageBytes: Buffer) {
+  private async detectLabelsInImage(imageBytes: Buffer | Uint8Array) {
     const command = new DetectLabelsCommand({
       Image: {
         Bytes: imageBytes,
