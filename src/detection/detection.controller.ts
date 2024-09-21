@@ -1,26 +1,24 @@
-import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
-
-import { Controller } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
-import { DetectImagesRequest, DetectImagesResponse } from '../proto/detection';
+import {
+  type DetectImagesRequest as IDetectImagesRequest,
+  type DetectImagesResponse as IDetectImagesResponse,
+} from '../proto/detection';
+import { DETECTION_SERVICE_KEY } from './constants/di-keys.constants';
+import { IDetectionService } from './detection.service.type';
 
 @Controller()
 export class DetectionController {
-  @GrpcMethod('DetectionService')
-  DetectImages(
-    data: DetectImagesRequest,
-    metadata: Metadata,
-    call: ServerUnaryCall<any, any>,
-  ): DetectImagesResponse {
-    console.log({
-      data,
-      metadata,
-      call,
-    });
+  constructor(
+    @Inject(DETECTION_SERVICE_KEY)
+    private detectionService: IDetectionService,
+  ) {}
 
-    return new DetectImagesResponse({
-      detections: [],
-    });
+  @GrpcMethod('DetectionService')
+  async DetectImages(
+    data: IDetectImagesRequest,
+  ): Promise<IDetectImagesResponse> {
+    return this.detectionService.detectLabelsInImages(data);
   }
 }
