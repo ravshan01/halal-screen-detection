@@ -54,7 +54,7 @@ export class DetectionService implements IDetectionService {
       const response = await this.rekognitionClient.send(command);
       const imageMetadata = await this.imagesService.getMetadata(imageBytes);
 
-      const data = response.Labels[0].Instances.map<IDetection>((instance) => ({
+      return response.Labels[0].Instances.map<IDetection>((instance) => ({
         object: DetectionObject.Person,
         score: instance.Confidence,
         coords: this.boundingBox2DetectionCoords(
@@ -62,8 +62,6 @@ export class DetectionService implements IDetectionService {
           imageMetadata,
         ),
       }));
-
-      return data;
     } catch (error) {
       console.error(error);
       throw new Error('Failed to detect labels in the image.');
