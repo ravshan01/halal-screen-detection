@@ -19,10 +19,10 @@ import {
   type Image,
   type ImageDetections,
 } from '../proto/detection';
-import { IDetectionService } from './detection.provider';
+import { DetectionProvider } from './detection.provider';
 
 @Injectable()
-export class DetectionService implements IDetectionService {
+export class DetectionService implements DetectionProvider {
   private rekognitionClient: RekognitionClient;
 
   constructor(

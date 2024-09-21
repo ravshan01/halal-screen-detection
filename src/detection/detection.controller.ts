@@ -5,13 +5,16 @@ import {
   type DetectImagesRequest as IDetectImagesRequest,
   type DetectImagesResponse as IDetectImagesResponse,
 } from '../proto/detection';
-import { DETECTION_SERVICE_KEY, IDetectionService } from './detection.provider';
+import {
+  DETECTION_PROVIDER_KEY,
+  DetectionProvider,
+} from './detection.provider';
 
 @Controller()
 export class DetectionController {
   constructor(
-    @Inject(DETECTION_SERVICE_KEY)
-    private detectionService: IDetectionService,
+    @Inject(DETECTION_PROVIDER_KEY)
+    private detectionService: DetectionProvider,
   ) {}
 
   @GrpcMethod('DetectionService')
