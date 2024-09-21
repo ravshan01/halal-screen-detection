@@ -18,9 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "proto:build:base": "protoc -I=./src/proto  --ts_opt=no_namespace --ts_out=src/proto detection.proto",
-    "proto:build:linux": "yarn proto:build:base --plugin=./node_modules/.bin/protoc-gen-ts && yarn proto:prettier-format",
-    "proto:build:windows": "yarn proto:build:base --plugin=./node_modules/.bin/protoc-gen-ts.cmd && yarn proto:prettier-format",
+    "proto:build": "npx protoc --ts_out=src/proto --proto_path=src/proto src/proto/detection.proto --ts_opt=eslint_disable && npm run proto:prettier-format",
     "proto:pull:master": "git fetch halal-screen-proto master && git subtree pull --prefix src/proto halal-screen-proto master --squash",
     "proto:prettier-format": "yarn prettier src/proto/**/*.ts --write"
   },
