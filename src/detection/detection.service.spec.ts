@@ -4,9 +4,13 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ImagesModule } from '../images/images.module';
-import { DetectImagesRequest, type Detection, Image } from '../proto/detection';
+import {
+  DetectImagesRequest,
+  type Detection,
+  DetectionObject,
+  Image,
+} from '../proto/detection';
 import { DetectionService } from './detection.service';
-import { DetectionObject } from './enums/detection-object.enum';
 import { DETECTION_IMAGES_WITH_RESULT_FOR_TEST } from './mock/images';
 
 describe('DetectionService', () => {
@@ -59,8 +63,9 @@ describe('DetectionService', () => {
 
       Object.entries(groupedDetections).forEach(([object, detections]) => {
         const count =
-          detectionImagesWithResult[index].result[object as DetectionObject]
-            .count;
+          detectionImagesWithResult[index].result[
+            object as unknown as DetectionObject
+          ].count;
 
         if (typeof count === 'number') {
           expect(detections).toHaveLength(count);
