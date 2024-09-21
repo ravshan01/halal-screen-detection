@@ -1,6 +1,6 @@
-import type {
-  DetectImagesRequest,
-  DetectImagesResponse,
+import {
+  type DetectImagesRequest,
+  type DetectImagesResponse,
 } from '../proto/detection';
 
 export interface IDetectionService {
