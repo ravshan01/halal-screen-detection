@@ -51,7 +51,7 @@ $ yarn run test:cov
      ```bash
      $ git subtree add --prefix src/proto halal-screen-proto master --squash
      ``` 
-   - Fetch (or use `proto:pull:master` package script)
+   - Fetch (or use `proto:fetch:master` package script)
      ```bash
      $ git fetch halal-screen-proto master
      ```
@@ -59,7 +59,13 @@ $ yarn run test:cov
      ```bash
      $ git subtree pull --prefix src/proto halal-screen-proto master --squash
      ```
-       
+     ```bash
+     $ :qa
+     ```
+   - Fetch and pull (or use `proto:fetch-pull:master` package script)
+     ```bash
+     $ git fetch halal-screen-proto master && git subtree pull --prefix src/proto halal-screen-proto master --squash
+     ```
      ```bash
      $ :qa
      ```
