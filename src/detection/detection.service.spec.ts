@@ -34,47 +34,55 @@ describe('DetectionService', () => {
     expect(service).toBeDefined();
   });
 
-  it("'detectLabelsInImages' should detect labels in images", async () => {
-    const detectionImagesWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST;
+  describe('detectLabelsInImages', () => {
+    it('should detect labels in images', async () => {
+      const detectionImagesWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST;
 
-    const buffers = await Promise.all(
-      detectionImagesWithResult.map((detectionImage) =>
-        fs.promises.readFile(detectionImage.path),
-      ),
-    );
-    const response = await service.detectLabelsInImages(
-      DetectImagesRequest.create({
-        images: buffers.map((buffer) => Image.create({ content: buffer })),
-      }),
-    );
-
-    expect(response).toBeDefined();
-    expect(response.detections).toBeDefined();
-    expect(response.detections).toHaveLength(detectionImagesWithResult.length);
-
-    response.detections.forEach((imageDetections, index) => {
-      const groupedDetections = imageDetections.detections.reduce(
-        (acc, detection) => ({
-          ...acc,
-          [detection.object]: [...(acc[detection.object] || []), detection],
+      const buffers = await Promise.all(
+        detectionImagesWithResult.map((detectionImage) =>
+          fs.promises.readFile(detectionImage.path),
+        ),
+      );
+      const response = await service.detectLabelsInImages(
+        DetectImagesRequest.create({
+          images: buffers.map((buffer) => Image.create({ content: buffer })),
         }),
-        {} as Record<DetectionObject, Detection[]>,
       );
 
-      Object.entries(groupedDetections).forEach(([object, detections]) => {
-        const count =
-          detectionImagesWithResult[index].result[
-            object as unknown as DetectionObject
-          ].count;
+      expect(response).toBeDefined();
+      expect(response.detections).toBeDefined();
+      expect(response.detections).toHaveLength(
+        detectionImagesWithResult.length,
+      );
 
-        if (typeof count === 'number') {
-          expect(detections).toHaveLength(count);
-        }
-        if (typeof count === 'object') {
-          expect(detections.length).toBeGreaterThanOrEqual(count.min);
-          expect(detections.length).toBeLessThanOrEqual(count.max);
-        }
+      response.detections.forEach((imageDetections, index) => {
+        const groupedDetections = imageDetections.detections.reduce(
+          (acc, detection) => ({
+            ...acc,
+            [detection.object]: [...(acc[detection.object] || []), detection],
+          }),
+          {} as Record<DetectionObject, Detection[]>,
+        );
+
+        Object.entries(groupedDetections).forEach(([object, detections]) => {
+          const count =
+            detectionImagesWithResult[index].result[
+              object as unknown as DetectionObject
+            ].count;
+
+          if (typeof count === 'number') {
+            expect(detections).toHaveLength(count);
+          }
+          if (typeof count === 'object') {
+            expect(detections.length).toBeGreaterThanOrEqual(count.min);
+            expect(detections.length).toBeLessThanOrEqual(count.max);
+          }
+        });
       });
     });
+
+    it.todo(
+      'should return an error if a file of a different format was transferred under the images',
+    );
   });
 });
