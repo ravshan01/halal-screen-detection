@@ -1,10 +1,12 @@
 import * as sharp from 'sharp';
+
 import { Injectable } from '@nestjs/common';
-import { IImagesService } from './images.service.type';
+
+import { ImagesProvider } from './images.provider';
 import { IImageMetadata } from './types/image-metadata.type';
 
 @Injectable()
-export class ImagesService implements IImagesService {
+export class ImagesService implements ImagesProvider {
   async getMetadata(
     image:
       | Buffer

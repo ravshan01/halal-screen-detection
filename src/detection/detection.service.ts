@@ -8,8 +8,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { EnvironmentVariables } from '../config/types/environment-variables.type';
-import { IMAGES_SERVICE_KEY } from '../images/constants/di-keys.constants';
-import { IImagesService } from '../images/images.service.type';
+import { IMAGES_PROVIDER_KEY, ImagesProvider } from '../images/images.provider';
 import { IImageMetadata } from '../images/types/image-metadata.type';
 import {
   DetectionObject,
@@ -27,8 +26,8 @@ export class DetectionService implements DetectionProvider {
 
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
-    @Inject(IMAGES_SERVICE_KEY)
-    private readonly imagesService: IImagesService,
+    @Inject(IMAGES_PROVIDER_KEY)
+    private readonly imagesService: ImagesProvider,
   ) {
     this.rekognitionClient = new RekognitionClient({
       region: configService.get('AWS_REGION'),
