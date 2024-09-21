@@ -1,7 +1,3 @@
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
 ## Installation
 ```bash
 $ corepack enable
@@ -45,27 +41,32 @@ $ yarn run test:cov
   ```bash
     $ git remote add halal-screen-proto path_to_repository
   ```
-
-- Subtree control
-   - Add
-     ```bash
-     $ git subtree add --prefix src/proto halal-screen-proto master --squash
-     ``` 
-   - Fetch (or use `proto:fetch:master` package script)
-     ```bash
-     $ git fetch halal-screen-proto master
-     ```
-   - Pull (or use `proto:pull:master` package script)
-     ```bash
-     $ git subtree pull --prefix src/proto halal-screen-proto master --squash
-     ```
-     ```bash
-     $ :qa
-     ```
-   - Fetch and pull (or use `proto:fetch-pull:master` package script)
-     ```bash
-     $ git fetch halal-screen-proto master && git subtree pull --prefix src/proto halal-screen-proto master --squash
-     ```
-     ```bash
-     $ :qa
-     ```
+    
+  #### Subtree Control
+  - Add
+    ```bash
+    $ git subtree add --prefix src/proto halal-screen-proto master --squash
+    ``` 
+  - Fetch (or use `proto:fetch:master` package script)
+    ```bash
+    $ git fetch halal-screen-proto master
+    ```
+  - Pull (or use `proto:pull:master` package script)
+    ```bash
+    $ git subtree pull --prefix src/proto halal-screen-proto master --squash
+    ```
+    ```bash
+    $ :qa
+    ```
+  - Fetch and pull (or use `proto:fetch-pull:master` package script)
+    ```bash
+    $ git fetch halal-screen-proto master && git subtree pull --prefix src/proto halal-screen-proto master --squash
+    ```
+    ```bash
+    $ :qa
+    ```
+     
+  #### Build
+  ```bash
+    $ yarn run proto:build
+  ```
