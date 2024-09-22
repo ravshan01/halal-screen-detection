@@ -4,8 +4,8 @@ import { GrpcMethod } from '@nestjs/microservices';
 import {
   DetectErrorCode,
   type DetectImagesRequest as IDetectImagesRequest,
-  DetectImagesResponse,
   type DetectImagesResponse as IDetectImagesResponse,
+  DetectImagesResponse,
 } from '../proto/detection';
 import { DETECTION_SERVICE_KEY, IDetectionService } from './detection.provider';
 
