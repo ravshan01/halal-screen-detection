@@ -3,9 +3,9 @@ import {
   type DetectImagesResponse,
 } from '../proto/detection';
 
-export const DETECTION_PROVIDER_KEY = 'DETECTION_PROVIDER_KEY';
+export const DETECTION_SERVICE_KEY = 'DETECTION_SERVICE_KEY';
 
-export interface IDetectionProvider {
+export interface IDetectionService {
   detectLabelsInImages(
     images: DetectImagesRequest,
   ): Promise<DetectImagesResponse>;

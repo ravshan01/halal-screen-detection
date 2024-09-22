@@ -1,8 +1,8 @@
 import { IImageMetadata } from './types/image-metadata.type';
 
-export const IMAGES_PROVIDER_KEY = 'IMAGES_PROVIDER_KEY';
+export const IMAGES_SERVICE_KEY = 'IMAGES_SERVICE_KEY';
 
-export interface IImagesProvider {
+export interface IImagesService {
   getMetadata(
     image:
       | Buffer

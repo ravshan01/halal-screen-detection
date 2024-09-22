@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 
-import { IMAGES_PROVIDER_KEY } from './images.provider';
+import { IMAGES_SERVICE_KEY } from './images.provider';
 import { ImagesService } from './images.service';
 
 @Module({
   providers: [
     {
-      provide: IMAGES_PROVIDER_KEY,
+      provide: IMAGES_SERVICE_KEY,
       useClass: ImagesService,
     },
   ],
   controllers: [],
-  exports: [IMAGES_PROVIDER_KEY],
+  exports: [IMAGES_SERVICE_KEY],
 })
 export class ImagesModule {}
