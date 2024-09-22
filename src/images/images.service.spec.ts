@@ -45,7 +45,6 @@ describe('ImagesService', () => {
       it('buffer', async () => {
         const buffer = await fs.promises.readFile(imagePath);
         const metadata = await service.getMetadata(buffer);
-        console.log(metadata);
 
         expect(metadata).toBeDefined();
         expect(metadata.format).toBe(IMAGES_MOCK_IMAGE_METADATA.format);
