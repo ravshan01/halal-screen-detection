@@ -21,27 +21,47 @@ describe('ImagesService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('should get metadata of an image', () => {
-    const imagePath = join(__dirname, './mock/image.jpg');
-
-    it('buffer', async () => {
+  describe('checkIsValidImage', () => {
+    it('should return true if image is valid', async () => {
+      const imagePath = join(__dirname, 'mock/image.jpg');
       const buffer = await fs.promises.readFile(imagePath);
-      const metadata = await service.getMetadata(buffer);
+      const isValid = await service.checkIsValidImage(buffer);
 
-      expect(metadata).toBeDefined();
-      expect(metadata.format).toBe(IMAGES_MOCK_IMAGE_METADATA.format);
-      expect(metadata.size).toBe(IMAGES_MOCK_IMAGE_METADATA.size);
-      expect(metadata.width).toBe(IMAGES_MOCK_IMAGE_METADATA.width);
-      expect(metadata.height).toBe(IMAGES_MOCK_IMAGE_METADATA.height);
+      expect(isValid).toBe(true);
     });
 
-    it('path', async () => {
-      const metadata = await service.getMetadata(imagePath);
+    it('should return false if image is invalid', async () => {
+      const buffer = Buffer.from('invalid image');
+      const isValid = await service.checkIsValidImage(buffer);
 
-      expect(metadata).toBeDefined();
-      expect(metadata.format).toBe(IMAGES_MOCK_IMAGE_METADATA.format);
-      expect(metadata.width).toBe(IMAGES_MOCK_IMAGE_METADATA.width);
-      expect(metadata.height).toBe(IMAGES_MOCK_IMAGE_METADATA.height);
+      expect(isValid).toBe(false);
+    });
+  });
+
+  describe('getMetadata', () => {
+    describe('should get metadata of an image', () => {
+      const imagePath = join(__dirname, 'mock/image.jpg');
+
+      it('buffer', async () => {
+        const buffer = await fs.promises.readFile(imagePath);
+        const metadata = await service.getMetadata(buffer);
+        console.log(metadata);
+
+        expect(metadata).toBeDefined();
+        expect(metadata.format).toBe(IMAGES_MOCK_IMAGE_METADATA.format);
+        expect(metadata.size).toBe(IMAGES_MOCK_IMAGE_METADATA.size);
+        expect(metadata.width).toBe(IMAGES_MOCK_IMAGE_METADATA.width);
+        expect(metadata.height).toBe(IMAGES_MOCK_IMAGE_METADATA.height);
+      });
+
+      it('path', async () => {
+        const metadata = await service.getMetadata(imagePath);
+
+        expect(metadata).toBeDefined();
+        expect(metadata.format).toBe(IMAGES_MOCK_IMAGE_METADATA.format);
+        expect(metadata.width).toBe(IMAGES_MOCK_IMAGE_METADATA.width);
+        expect(metadata.height).toBe(IMAGES_MOCK_IMAGE_METADATA.height);
+      });
     });
   });
 });

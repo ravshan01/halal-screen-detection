@@ -3,6 +3,8 @@ import { IImageMetadata } from './types/image-metadata.type';
 export const IMAGES_SERVICE_KEY = 'IMAGES_SERVICE_KEY';
 
 export interface IImagesService {
+  checkIsValidImage(image: Buffer | Uint8Array): Promise<boolean>;
+
   getMetadata(
     image:
       | Buffer

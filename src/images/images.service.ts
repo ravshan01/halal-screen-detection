@@ -7,6 +7,21 @@ import { IImageMetadata } from './types/image-metadata.type';
 
 @Injectable()
 export class ImagesService implements IImagesService {
+  async checkIsValidImage(image: Buffer | Uint8Array): Promise<boolean> {
+    try {
+      await sharp(image).metadata();
+      return true;
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.includes('Input buffer contains unsupported image format')
+      )
+        return false;
+
+      throw error;
+    }
+  }
+
   async getMetadata(
     image:
       | Buffer
