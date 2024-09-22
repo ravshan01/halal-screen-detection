@@ -63,5 +63,17 @@ describe('ImagesService', () => {
         expect(metadata.height).toBe(IMAGES_MOCK_IMAGE_METADATA.height);
       });
     });
+
+    describe('should throw an error', () => {
+      it('if image is invalid', async () => {
+        const buffer = Buffer.from('invalid image');
+        await expect(service.getMetadata(buffer)).rejects.toThrow();
+      });
+
+      it('if image is not found', async () => {
+        const imagePath = join(__dirname, 'mock/not-found.jpg');
+        await expect(service.getMetadata(imagePath)).rejects.toThrow();
+      });
+    });
   });
 });
