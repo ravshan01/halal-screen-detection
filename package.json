@@ -22,7 +22,7 @@
     "proto:fetch:master": "git fetch halal-screen-proto master",
     "proto:pull:master": "git subtree pull --prefix src/proto halal-screen-proto master --squash",
     "proto:fetch-pull:master": "npm run proto:fetch:master && npm run proto:pull:master",
-    "proto:prettier-format": "npm run prettier src/proto/**/*.ts --write"
+    "proto:prettier-format": "prettier src/proto/**/*.ts --write"
   },
   "dependencies": {
     "@aws-sdk/client-rekognition": "^3.614.0",
