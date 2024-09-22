@@ -30,7 +30,7 @@ describe('AppController (e2e)', () => {
         AppModule,
         ClientsModule.register([
           {
-            name: 'DETECTION_PACKAGE',
+            name: 'detection',
             transport: Transport.GRPC,
             options: {
               package: 'detection',
@@ -50,7 +50,7 @@ describe('AppController (e2e)', () => {
     });
     await microservice.listen();
 
-    const detectionClient: ClientGrpc = microservice.get('DETECTION_PACKAGE');
+    const detectionClient: ClientGrpc = microservice.get('detection');
     detectionService = detectionClient.getService('DetectionService');
   });
   afterEach(async () => {
