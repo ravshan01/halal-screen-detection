@@ -2,7 +2,9 @@ import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
 import {
+  DetectErrorCode,
   type DetectImagesRequest as IDetectImagesRequest,
+  DetectImagesResponse,
   type DetectImagesResponse as IDetectImagesResponse,
 } from '../proto/detection';
 import { DETECTION_SERVICE_KEY, IDetectionService } from './detection.provider';
@@ -18,6 +20,17 @@ export class DetectionController {
   async DetectImages(
     data: IDetectImagesRequest,
   ): Promise<IDetectImagesResponse> {
-    return this.detectionService.detectLabelsInImages(data);
+    try {
+      return await this.detectionService.detectLabelsInImages(data);
+    } catch (err) {
+      console.error(err);
+
+      return DetectImagesResponse.create({
+        error: {
+          code: DetectErrorCode.InternalError,
+          message: err.message,
+        },
+      });
+    }
   }
 }
