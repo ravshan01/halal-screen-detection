@@ -39,7 +39,7 @@ $ yarn run test:cov
 - Репозиторий halal-screen-proto добавлен как удалённый репозиторий в этом проекте с таким же названием  
   Выполнено командой:
   ```bash
-    $ git remote add halal-screen-proto path_to_repository
+    $ git remote add halal-screen-proto git@github.com:ravshan01/halal-screen-proto.git
   ```
     
   #### Subtree Control
