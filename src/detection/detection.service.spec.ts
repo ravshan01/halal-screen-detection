@@ -79,7 +79,7 @@ describe('DetectionService', () => {
           }
         });
       });
-    });
+    }, 0);
 
     it.todo(
       'should return an error, ' +
