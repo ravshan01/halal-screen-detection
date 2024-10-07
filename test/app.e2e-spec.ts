@@ -83,12 +83,8 @@ describe('AppController (e2e)', () => {
       expect(data).toBeDefined();
       expect(data.detections).toBeDefined();
       expect(data.detections.length).toBe(1);
-    }, 0);
+    }, 10000);
 
-    it.todo(
-      'should return an error, ' +
-        'if a file of a different format was transferred under the image,' +
-        'returning the detection result for correctly transmitted images',
-    );
+    it.todo('should return an error if invalid image content is provided');
   });
 });
