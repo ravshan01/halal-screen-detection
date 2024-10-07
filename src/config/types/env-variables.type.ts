@@ -1,6 +1,6 @@
 export interface IEnvVariables {
   PORT: number;
-  MAX_IMAGES: number;
+  MAX_IMAGES_PER_REQUEST: number;
   MAX_IMAGE_SIZE: number;
 
   AWS_REGION: string;
