@@ -11,6 +11,7 @@ import {
   type Detection,
   DetectionObject,
   Image,
+  ImageDetections_ErrorCode,
 } from '../proto/detection';
 import { DetectionService } from './detection.service';
 import { DETECTION_IMAGES_WITH_RESULT_FOR_TEST } from './mock/images';
@@ -74,6 +75,22 @@ describe('DetectionService', () => {
       expect(res).toBeDefined();
       expect(res.error).toBeDefined();
       expect(res.error.code).toBe(DetectErrorCode.MaxImagesExceeded);
+    });
+
+    it('should return ImageDetections.Error with InvalidImage code if invalid image provided', async () => {
+      const res = await service.DetectLabelsInImages(
+        DetectImagesRequest.create({
+          images: [Image.create({ content: Buffer.from('Invalid image') })],
+        }),
+      );
+
+      expect(res).toBeDefined();
+      expect(res.detections).toBeDefined();
+      expect(res.detections[0]).toBeDefined();
+      expect(res.detections[0].error).toBeDefined();
+      expect(res.detections[0].error.code).toBe(
+        ImageDetections_ErrorCode.InvalidImage,
+      );
     });
 
     it('should detect labels in images', async () => {

@@ -56,20 +56,29 @@ export class DetectionService implements IDetectionService {
     return DetectImagesResponse.create({ detections });
   }
 
-  // TODO: check image.content
   private async detectLabelsInImage(image: IImage) {
-    const command = new DetectLabelsCommand({
-      Image: {
-        Bytes: image.content,
-      },
-      Settings: {
-        GeneralLabels: {
-          LabelInclusionFilters: ['Person'],
-        },
-      },
-    });
+    const isValidImage = await this.imagesService.checkIsValidImage(
+      image.content,
+    );
+    if (!isValidImage)
+      return ImageDetections.create({
+        error: ImageDetections_Error.create({
+          code: ImageDetections_ErrorCode.InvalidImage,
+        }),
+      });
 
     try {
+      const command = new DetectLabelsCommand({
+        Image: {
+          Bytes: image.content,
+        },
+        Settings: {
+          GeneralLabels: {
+            LabelInclusionFilters: ['Person'],
+          },
+        },
+      });
+
       const response = await this.rekognitionClient.send(command);
       const imageMetadata = await this.imagesService.getMetadata(image.content);
 
