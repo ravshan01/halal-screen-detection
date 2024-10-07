@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ImagesModule } from '../images/images.module';
 import {
+  DetectErrorCode,
   DetectImagesRequest,
   type Detection,
   DetectionObject,
@@ -35,6 +36,25 @@ describe('DetectionService', () => {
   });
 
   describe('DetectLabelsInImages', () => {
+    it.each([
+      {
+        title: 'should return an error if no images are provided',
+        images: undefined,
+      },
+      {
+        title: 'should return an error if empty array of images is provided',
+        images: [],
+      },
+    ])('$title', async ({ images }) => {
+      const res = await service.DetectLabelsInImages(
+        DetectImagesRequest.create({ images }),
+      );
+
+      expect(res).toBeDefined();
+      expect(res.error).toBeDefined();
+      expect(res.error.code).toBe(DetectErrorCode.BadRequest);
+    });
+
     it('should detect labels in images', async () => {
       const detectionImagesWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST;
 
@@ -80,7 +100,5 @@ describe('DetectionService', () => {
         });
       });
     }, 10000);
-
-    it.todo('should return an error if invalid image content is provided');
   });
 });

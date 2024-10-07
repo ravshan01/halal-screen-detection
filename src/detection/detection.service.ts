@@ -21,6 +21,8 @@ import {
   ImageDetections_Error,
   ImageDetections_ErrorCode,
   DetectImagesResponse,
+  DetectError,
+  DetectErrorCode,
 } from '../proto/detection';
 import { IDetectionService } from './detection.provider';
 
@@ -44,6 +46,14 @@ export class DetectionService implements IDetectionService {
   }
 
   async DetectLabelsInImages(request: IDetectImagesRequest) {
+    if (!request.images || request.images.length === 0)
+      return DetectImagesResponse.create({
+        error: DetectError.create({
+          code: DetectErrorCode.BadRequest,
+          message: 'No images provided',
+        }),
+      });
+
     const detections = await Promise.all(
       request.images.map((image) => this.detectLabelsInImage(image)),
     );
