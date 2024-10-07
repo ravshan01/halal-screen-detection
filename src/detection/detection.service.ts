@@ -14,6 +14,7 @@ import {
   DetectionObject,
   type DetectImagesRequest as IDetectImagesRequest,
   type DetectImagesResponse as IDetectImagesResponse,
+  type ImageDetections as IImageDetections,
   type Detection as IDetection,
   type Image as IImage,
   Detection,
@@ -58,15 +59,8 @@ export class DetectionService implements IDetectionService {
   }
 
   private async detectLabelsInImage(image: IImage) {
-    const isValidImage = await this.imagesService.checkIsValidImage(
-      image.content,
-    );
-    if (!isValidImage)
-      return ImageDetections.create({
-        error: ImageDetections_Error.create({
-          code: ImageDetections_ErrorCode.InvalidImage,
-        }),
-      });
+    const validationResult = await this.checkIsValidImage(image);
+    if (!validationResult.success) return validationResult.resWithErr;
     // TODO: check max image size
 
     try {
@@ -116,36 +110,56 @@ export class DetectionService implements IDetectionService {
     const tooManyImagesResult = this.checkNotTooManyImages(images);
     if (!tooManyImagesResult.success) return tooManyImagesResult;
 
-    return { success: true };
+    return { success: true, resWithErr: null };
   }
 
   private checkHasImages(images: IImage[]): IValidationResult {
-    if (!images || images.length === 0)
-      return {
-        success: false,
-        resWithErr: DetectImagesResponse.create({
-          error: DetectError.create({
-            code: DetectErrorCode.BadRequest,
-            message: 'No images provided',
-          }),
-        }),
-      };
+    const success = images && images.length > 0;
 
-    return { success: true };
+    return {
+      success,
+      resWithErr: success
+        ? null
+        : DetectImagesResponse.create({
+            error: DetectError.create({
+              code: DetectErrorCode.BadRequest,
+              message: 'No images provided',
+            }),
+          }),
+    };
   }
   private checkNotTooManyImages(images: IImage[]): IValidationResult {
-    if (images.length > this.configService.get('MAX_IMAGES_PER_REQUEST'))
-      return {
-        success: false,
-        resWithErr: DetectImagesResponse.create({
-          error: DetectError.create({
-            code: DetectErrorCode.MaxImagesExceeded,
-            message: 'Too many images provided',
-          }),
-        }),
-      };
+    const success =
+      images.length <= this.configService.get('MAX_IMAGES_PER_REQUEST');
 
-    return { success: true };
+    return {
+      success: success,
+      resWithErr: success
+        ? null
+        : DetectImagesResponse.create({
+            error: DetectError.create({
+              code: DetectErrorCode.MaxImagesExceeded,
+              message: 'Too many images provided',
+            }),
+          }),
+    };
+  }
+
+  private async checkIsValidImage(
+    image: IImage,
+  ): Promise<IValidationResult<IImageDetections>> {
+    const success = await this.imagesService.checkIsValidImage(image.content);
+
+    return {
+      success,
+      resWithErr: success
+        ? null
+        : ImageDetections.create({
+            error: ImageDetections_Error.create({
+              code: ImageDetections_ErrorCode.InvalidImage,
+            }),
+          }),
+    };
   }
 
   /**
@@ -174,7 +188,7 @@ export class DetectionService implements IDetectionService {
   }
 }
 
-interface IValidationResult {
+interface IValidationResult<ResType extends object = IDetectImagesResponse> {
   success: boolean;
-  resWithErr?: IDetectImagesResponse;
+  resWithErr: ResType | null;
 }
