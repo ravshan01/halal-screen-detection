@@ -7,7 +7,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { IEnvironmentVariables } from '../config/types/environment-variables.type';
+import { IEnvVariables } from '../config/types/env-variables.type';
 import { IMAGES_SERVICE_KEY, IImagesService } from '../images/images.provider';
 import { IImageMetadata } from '../images/types/image-metadata.type';
 import {
@@ -25,7 +25,7 @@ export class DetectionService implements IDetectionService {
   private rekognitionClient: RekognitionClient;
 
   constructor(
-    private readonly configService: ConfigService<IEnvironmentVariables>,
+    private readonly configService: ConfigService<IEnvVariables>,
     @Inject(IMAGES_SERVICE_KEY)
     private readonly imagesService: IImagesService,
   ) {

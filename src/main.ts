@@ -5,11 +5,11 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
-import { IEnvironmentVariables } from './config/types/environment-variables.type';
+import { IEnvVariables } from './config/types/env-variables.type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService<IEnvironmentVariables>);
+  const configService = app.get(ConfigService<IEnvVariables>);
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,

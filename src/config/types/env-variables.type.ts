@@ -1,4 +1,4 @@
-export interface IEnvironmentVariables {
+export interface IEnvVariables {
   PORT: number;
 
   AWS_REGION: string;
