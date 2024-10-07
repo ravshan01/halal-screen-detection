@@ -20,6 +20,7 @@ import {
 } from '../proto/detection';
 import { IDetectionService } from './detection.provider';
 
+// TODO: use [ProtoObject].create instead of interfaces
 @Injectable()
 export class DetectionService implements IDetectionService {
   private rekognitionClient: RekognitionClient;
