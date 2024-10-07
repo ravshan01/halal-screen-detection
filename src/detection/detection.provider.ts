@@ -6,7 +6,7 @@ import {
 export const DETECTION_SERVICE_KEY = 'DETECTION_SERVICE_KEY';
 
 export interface IDetectionService {
-  detectLabelsInImages(
+  DetectLabelsInImages(
     images: DetectImagesRequest,
   ): Promise<DetectImagesResponse>;
 }

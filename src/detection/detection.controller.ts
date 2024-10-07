@@ -21,7 +21,7 @@ export class DetectionController {
     data: IDetectImagesRequest,
   ): Promise<IDetectImagesResponse> {
     try {
-      return await this.detectionService.detectLabelsInImages(data);
+      return await this.detectionService.DetectLabelsInImages(data);
     } catch (err) {
       console.error(err);
 

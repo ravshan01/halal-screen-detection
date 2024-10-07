@@ -39,7 +39,7 @@ export class DetectionService implements IDetectionService {
     });
   }
 
-  async detectLabelsInImages(
+  async DetectLabelsInImages(
     request: DetectImagesRequest,
   ): Promise<DetectImagesResponse> {
     const detections = await Promise.all(

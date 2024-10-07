@@ -34,7 +34,7 @@ describe('DetectionService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('detectLabelsInImages', () => {
+  describe('DetectLabelsInImages', () => {
     it('should detect labels in images', async () => {
       const detectionImagesWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST;
 
@@ -43,7 +43,7 @@ describe('DetectionService', () => {
           fs.promises.readFile(detectionImage.path),
         ),
       );
-      const response = await service.detectLabelsInImages(
+      const response = await service.DetectLabelsInImages(
         DetectImagesRequest.create({
           images: buffers.map((buffer) => Image.create({ content: buffer })),
         }),
