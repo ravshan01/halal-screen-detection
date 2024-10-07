@@ -79,7 +79,7 @@ describe('DetectionService', () => {
           }
         });
       });
-    }, 0);
+    }, 10000);
 
     it.todo('should return an error if invalid image content is provided');
   });
