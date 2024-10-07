@@ -12,13 +12,7 @@ export class ImagesService implements IImagesService {
       await sharp(image).metadata();
       return true;
     } catch (error) {
-      if (
-        error instanceof Error &&
-        error.message.includes('Input buffer contains unsupported image format')
-      )
-        return false;
-
-      throw error;
+      return false;
     }
   }
 
