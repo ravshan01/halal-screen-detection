@@ -81,10 +81,6 @@ describe('DetectionService', () => {
       });
     }, 0);
 
-    it.todo(
-      'should return an error, ' +
-        'if a file of a different format was transferred under the image,' +
-        'returning the detection result for correctly transmitted images',
-    );
+    it.todo('should return an error if invalid image content is provided');
   });
 });
