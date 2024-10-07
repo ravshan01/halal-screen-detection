@@ -8,24 +8,21 @@ import {
 export const DETECTION_VALIDATOR_KEY = 'DETECTION_VALIDATOR_KEY';
 
 export interface IDetectionValidator {
-  validateRequestOnHasImagesOrTooMany(
+  validateImagesCount(
     request: IDetectImagesRequest,
   ): IDetectionValidationResult;
-  validateRequestOnHasImages(
+  validateImagesExists(
     request: IDetectImagesRequest,
   ): IDetectionValidationResult;
-  validateRequestOnHasTooManyImages(
+  validateImagesLimit(
     request: IDetectImagesRequest,
   ): IDetectionValidationResult;
 
-  validateImageOnValidityOrMaxSize(
+  validateImage(image: IImage): IDetectionValidationResult<IImageDetections>;
+  validateImageContent(
     image: IImage,
   ): IDetectionValidationResult<IImageDetections>;
-
-  validateImageOnValidity(
-    image: IImage,
-  ): IDetectionValidationResult<IImageDetections>;
-  validateImageONMaxSize(
+  validateImageSize(
     image: IImage,
   ): IDetectionValidationResult<IImageDetections>;
 }
