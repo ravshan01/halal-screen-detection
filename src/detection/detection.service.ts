@@ -66,6 +66,7 @@ export class DetectionService implements IDetectionService {
           code: ImageDetections_ErrorCode.InvalidImage,
         }),
       });
+    // TODO: check max image size
 
     try {
       const command = new DetectLabelsCommand({
