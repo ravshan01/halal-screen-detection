@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "proto:build": "npx protoc --ts_out=src/proto --proto_path=src/proto src/proto/detection.proto --ts_opt=eslint_disable && npm run proto:prettier-format",
+    "proto:build": "npx protoc --ts_out=src/proto --ts_opt=eslint_disable --ts_opt=force_client_none --proto_path=src/proto src/proto/detection.proto && npm run proto:prettier-format",
     "proto:fetch:master": "git fetch halal-screen-proto master",
     "proto:pull:master": "git subtree pull --prefix src/proto halal-screen-proto master --squash",
     "proto:prettier-format": "prettier src/proto/**/*.ts --write"
