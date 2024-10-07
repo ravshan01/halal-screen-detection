@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import { AppController } from './app.controller';
 import { DetectionModule } from './detection/detection.module';
 
 @Module({
@@ -18,7 +19,7 @@ import { DetectionModule } from './detection/detection.module';
     }),
     DetectionModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

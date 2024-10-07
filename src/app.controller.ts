@@ -2,15 +2,18 @@ import { Controller, Inject } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
 import {
+  DETECTION_SERVICE_KEY,
+  IDetectionService,
+} from './detection/detection.provider';
+import {
   DetectErrorCode,
   type DetectImagesRequest as IDetectImagesRequest,
   type DetectImagesResponse as IDetectImagesResponse,
   DetectImagesResponse,
-} from '../proto/detection';
-import { DETECTION_SERVICE_KEY, IDetectionService } from './detection.provider';
+} from './proto/detection';
 
 @Controller()
-export class DetectionController {
+export class AppController {
   constructor(
     @Inject(DETECTION_SERVICE_KEY)
     private detectionService: IDetectionService,
