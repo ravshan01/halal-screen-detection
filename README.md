@@ -1,3 +1,5 @@
+
+
 ## Installation
 ```bash
 $ corepack enable
@@ -5,6 +7,9 @@ $ corepack enable
 ```bash
 $ yarn install
 ```
+
+## Start
+Create `.env.[mode].locale` files by `.env.local.example` file
 
 ## Running the app
 
