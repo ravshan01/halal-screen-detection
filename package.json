@@ -21,7 +21,6 @@
     "proto:build": "npx protoc --ts_out=src/proto --proto_path=src/proto src/proto/detection.proto --ts_opt=eslint_disable && npm run proto:prettier-format",
     "proto:fetch:master": "git fetch halal-screen-proto master",
     "proto:pull:master": "git subtree pull --prefix src/proto halal-screen-proto master --squash",
-    "proto:fetch-pull:master": "npm run proto:fetch:master && npm run proto:pull:master",
     "proto:prettier-format": "prettier src/proto/**/*.ts --write"
   },
   "dependencies": {

@@ -58,13 +58,6 @@ $ yarn run test:cov
     ```bash
     $ :qa
     ```
-  - Fetch and pull (or use `proto:fetch-pull:master` package script)
-    ```bash
-    $ git fetch halal-screen-proto master && git subtree pull --prefix src/proto halal-screen-proto master --squash
-    ```
-    ```bash
-    $ :qa
-    ```
      
   #### Build
   ```bash
