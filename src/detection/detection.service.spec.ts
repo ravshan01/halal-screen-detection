@@ -94,7 +94,7 @@ describe('DetectionService', () => {
       );
     });
 
-    it.skip('should detect labels in images', async () => {
+    it('should detect labels in images', async () => {
       const detectionImagesWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST;
 
       const buffers = await Promise.all(
