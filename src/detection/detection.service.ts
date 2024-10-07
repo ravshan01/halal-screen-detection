@@ -13,6 +13,7 @@ import { IImageMetadata } from '../images/types/image-metadata.type';
 import {
   DetectionObject,
   type DetectImagesRequest as IDetectImagesRequest,
+  type DetectImagesResponse as IDetectImagesResponse,
   type Detection as IDetection,
   type Image as IImage,
   Detection,
@@ -46,8 +47,8 @@ export class DetectionService implements IDetectionService {
   }
 
   async DetectLabelsInImages(request: IDetectImagesRequest) {
-    const res = this.checkHasImagesAndNotTooMany(request.images);
-    if (res) return res;
+    const validationResult = this.checkHasImagesAndNotTooMany(request.images);
+    if (!validationResult.success) return validationResult.resWithErr;
 
     const detections = await Promise.all(
       request.images.map((image) => this.detectLabelsInImage(image)),
@@ -108,38 +109,43 @@ export class DetectionService implements IDetectionService {
     }
   }
 
-  /** return DetectImagesResponse with error if no images provided or too many images */
-  private checkHasImagesAndNotTooMany(images: IImage[]) {
-    const hasRes = this.checkHasImages(images);
-    if (hasRes) return hasRes;
+  private checkHasImagesAndNotTooMany(images: IImage[]): IValidationResult {
+    const hasImageResult = this.checkHasImages(images);
+    if (!hasImageResult.success) return hasImageResult;
 
-    const tooManyRes = this.checkNotTooManyImages(images);
-    if (tooManyRes) return tooManyRes;
+    const tooManyImagesResult = this.checkNotTooManyImages(images);
+    if (!tooManyImagesResult.success) return tooManyImagesResult;
 
-    return null;
+    return { success: true };
   }
 
-  private checkHasImages(images: IImage[]) {
+  private checkHasImages(images: IImage[]): IValidationResult {
     if (!images || images.length === 0)
-      return DetectImagesResponse.create({
-        error: DetectError.create({
-          code: DetectErrorCode.BadRequest,
-          message: 'No images provided',
+      return {
+        success: false,
+        resWithErr: DetectImagesResponse.create({
+          error: DetectError.create({
+            code: DetectErrorCode.BadRequest,
+            message: 'No images provided',
+          }),
         }),
-      });
+      };
 
-    return null;
+    return { success: true };
   }
-  private checkNotTooManyImages(images: IImage[]) {
+  private checkNotTooManyImages(images: IImage[]): IValidationResult {
     if (images.length > this.configService.get('MAX_IMAGES_PER_REQUEST'))
-      return DetectImagesResponse.create({
-        error: DetectError.create({
-          code: DetectErrorCode.MaxImagesExceeded,
-          message: 'Too many images provided',
+      return {
+        success: false,
+        resWithErr: DetectImagesResponse.create({
+          error: DetectError.create({
+            code: DetectErrorCode.MaxImagesExceeded,
+            message: 'Too many images provided',
+          }),
         }),
-      });
+      };
 
-    return null;
+    return { success: true };
   }
 
   /**
@@ -166,4 +172,9 @@ export class DetectionService implements IDetectionService {
       height: box.Height * metadata.height,
     });
   }
+}
+
+interface IValidationResult {
+  success: boolean;
+  resWithErr?: IDetectImagesResponse;
 }
