@@ -1,8 +1,9 @@
-import * as fs from 'node:fs';
+import { readFile } from 'node:fs/promises';
 
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { IEnvVariables } from '../config/types/env-variables.type';
 import { ImagesModule } from '../images/images.module';
 import {
   DetectErrorCode,
@@ -16,6 +17,7 @@ import { DETECTION_IMAGES_WITH_RESULT_FOR_TEST } from './mock/images';
 
 describe('DetectionService', () => {
   let service: DetectionService;
+  let configService: ConfigService<IEnvVariables>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +31,7 @@ describe('DetectionService', () => {
     }).compile();
 
     service = module.get<DetectionService>(DetectionService);
+    configService = module.get<ConfigService<IEnvVariables>>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -55,27 +58,43 @@ describe('DetectionService', () => {
       expect(res.error.code).toBe(DetectErrorCode.BadRequest);
     });
 
+    it('should return an error if many images are provided', async () => {
+      const maxImages = configService.get('MAX_IMAGES_PER_REQUEST');
+      const image = await readFile(
+        DETECTION_IMAGES_WITH_RESULT_FOR_TEST[0].path,
+      );
+      const images = Array.from({ length: maxImages + 1 }, () =>
+        Image.create({ content: image }),
+      );
+
+      const res = await service.DetectLabelsInImages(
+        DetectImagesRequest.create({ images }),
+      );
+
+      expect(res).toBeDefined();
+      expect(res.error).toBeDefined();
+      expect(res.error.code).toBe(DetectErrorCode.MaxImagesExceeded);
+    });
+
     it('should detect labels in images', async () => {
       const detectionImagesWithResult = DETECTION_IMAGES_WITH_RESULT_FOR_TEST;
 
       const buffers = await Promise.all(
         detectionImagesWithResult.map((detectionImage) =>
-          fs.promises.readFile(detectionImage.path),
+          readFile(detectionImage.path),
         ),
       );
-      const response = await service.DetectLabelsInImages(
+      const res = await service.DetectLabelsInImages(
         DetectImagesRequest.create({
           images: buffers.map((buffer) => Image.create({ content: buffer })),
         }),
       );
 
-      expect(response).toBeDefined();
-      expect(response.detections).toBeDefined();
-      expect(response.detections).toHaveLength(
-        detectionImagesWithResult.length,
-      );
+      expect(res).toBeDefined();
+      expect(res.detections).toBeDefined();
+      expect(res.detections).toHaveLength(detectionImagesWithResult.length);
 
-      response.detections.forEach((imageDetections, index) => {
+      res.detections.forEach((imageDetections, index) => {
         const groupedDetections = imageDetections.detections.reduce(
           (acc, detection) => ({
             ...acc,

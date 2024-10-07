@@ -31,7 +31,7 @@ export class DetectionService implements IDetectionService {
   private rekognitionClient: RekognitionClient;
 
   constructor(
-    configService: ConfigService<IEnvVariables>,
+    private readonly configService: ConfigService<IEnvVariables>,
     @Inject(IMAGES_SERVICE_KEY)
     private readonly imagesService: IImagesService,
   ) {
@@ -46,13 +46,8 @@ export class DetectionService implements IDetectionService {
   }
 
   async DetectLabelsInImages(request: IDetectImagesRequest) {
-    if (!request.images || request.images.length === 0)
-      return DetectImagesResponse.create({
-        error: DetectError.create({
-          code: DetectErrorCode.BadRequest,
-          message: 'No images provided',
-        }),
-      });
+    const res = this.checkHasImagesAndNotTooMany(request.images);
+    if (res) return res;
 
     const detections = await Promise.all(
       request.images.map((image) => this.detectLabelsInImage(image)),
@@ -101,6 +96,27 @@ export class DetectionService implements IDetectionService {
         }),
       });
     }
+  }
+
+  /** return DetectImagesResponse with error if no images provided or too many images */
+  private checkHasImagesAndNotTooMany(images: IImage[]) {
+    if (!images || images.length === 0)
+      return DetectImagesResponse.create({
+        error: DetectError.create({
+          code: DetectErrorCode.BadRequest,
+          message: 'No images provided',
+        }),
+      });
+
+    if (images.length > this.configService.get('MAX_IMAGES_PER_REQUEST'))
+      return DetectImagesResponse.create({
+        error: DetectError.create({
+          code: DetectErrorCode.MaxImagesExceeded,
+          message: 'Too many images provided',
+        }),
+      });
+
+    return null;
   }
 
   /**
