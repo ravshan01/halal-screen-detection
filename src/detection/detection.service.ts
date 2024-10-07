@@ -109,6 +109,16 @@ export class DetectionService implements IDetectionService {
 
   /** return DetectImagesResponse with error if no images provided or too many images */
   private checkHasImagesAndNotTooMany(images: IImage[]) {
+    const hasRes = this.checkHasImages(images);
+    if (hasRes) return hasRes;
+
+    const tooManyRes = this.checkNotTooManyImages(images);
+    if (tooManyRes) return tooManyRes;
+
+    return null;
+  }
+
+  private checkHasImages(images: IImage[]) {
     if (!images || images.length === 0)
       return DetectImagesResponse.create({
         error: DetectError.create({
@@ -117,6 +127,9 @@ export class DetectionService implements IDetectionService {
         }),
       });
 
+    return null;
+  }
+  private checkNotTooManyImages(images: IImage[]) {
     if (images.length > this.configService.get('MAX_IMAGES_PER_REQUEST'))
       return DetectImagesResponse.create({
         error: DetectError.create({
