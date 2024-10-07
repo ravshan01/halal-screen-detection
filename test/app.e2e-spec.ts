@@ -18,7 +18,7 @@ import {
   Image,
 } from '../src/proto/detection';
 
-describe('App (e2e)', () => {
+describe('AppController (e2e)', () => {
   let microservice: INestMicroservice;
   let detectionService: {
     DetectImages: (
@@ -26,18 +26,22 @@ describe('App (e2e)', () => {
     ) => Observable<IDetectImagesResponse>;
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         AppModule,
-        ClientsModule.register([
+        ClientsModule.registerAsync([
           {
-            name: 'detection',
-            transport: Transport.GRPC,
-            options: {
-              package: 'detection',
-              protoPath: join(process.cwd(), 'src/proto/detection.proto'),
-            },
+            name: 'DETECTION_CLIENT',
+            useFactory: (configService: ConfigService<IEnvVariables>) => ({
+              transport: Transport.GRPC,
+              options: {
+                package: 'detection',
+                protoPath: join(process.cwd(), 'src/proto/detection.proto'),
+                url: `localhost:${configService.get<IEnvVariables['PORT']>('PORT')}`,
+              },
+            }),
+            inject: [ConfigService],
           },
         ]),
       ],
@@ -56,10 +60,10 @@ describe('App (e2e)', () => {
     });
     await microservice.listen();
 
-    const detectionClient: ClientGrpc = microservice.get('detection');
+    const detectionClient: ClientGrpc = moduleFixture.get('DETECTION_CLIENT');
     detectionService = detectionClient.getService('DetectionService');
   });
-  afterEach(async () => {
+  afterAll(async () => {
     await microservice.close();
   });
 
@@ -79,7 +83,7 @@ describe('App (e2e)', () => {
       expect(data).toBeDefined();
       expect(data.detections).toBeDefined();
       expect(data.detections.length).toBe(1);
-    });
+    }, 0);
 
     it.todo(
       'should return an error, ' +
